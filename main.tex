@@ -8,7 +8,9 @@
 \usepackage{geometry}
 \usepackage{hyperref}
 \usepackage{titlesec}
-% \usepackage{mathptmx} % Times New Roman clone
+\usepackage{array}       % for p{} in tables
+\usepackage{booktabs}    % better tables (optional)
+\usepackage{enumitem}    % control list spacing (optional)
 
 % ——— PAGE LAYOUT ———
 \linespread{1.5} % 1.5 line spacing
@@ -17,8 +19,8 @@
 % ——— METADATA ———
 \newcommand{\university}{Deggendorf Institute of Technology}
 \newcommand{\faculty}{Faculty of Computer Science, Bachelor Artificial Intelligence}
-% \newcommand{\papertitle}{Can Customer Behavior During the First 14 Days After Signup Predict Churn Within 90 Days, Using Logistic Regression?}
-\newcommand{\papertitle}{To what extent does integrating CLV predictions into marketing automation improve customer engagement and reduce churn?}
+\newcommand{\papertitle}{Predicting Customer Behavior and Lifetime Value Using Explainable AI for Marketing Insights in a SaaS Platform}
+
 \newcommand{\authorname}{Leander-Arun Ziehm}
 \newcommand{\studentid}{22201349}
 \newcommand{\supervisor}{Johannes Reisinger, M.Sc.}
@@ -26,17 +28,19 @@
 
 % ——— TITLE PAGE ———
 \begin{document}
+
 \begin{titlepage}
   \centering
   \vfill
 
   \includegraphics[width=9cm]{THD_Logo.jpg}\\[1cm]
+
   {\Large \university}\\
   {\large \faculty}\\[1.5cm]
 
   {\LARGE \textbf{Mini Exposé}}\\[1cm]
   {\LARGE \textbf{\papertitle}}\\[1.5cm]
-  
+
   \begin{flushleft}
     \textbf{Student Name:} \authorname\\
     \textbf{Matriculation Number:} \studentid\\
@@ -47,8 +51,11 @@
   \vfill
 \end{titlepage}
 
+\clearpage
+\pagenumbering{arabic}
+
 \begin{abstract}
-Customer churn is a critical issue for subscription-based and transactional businesses, directly impacting revenue and growth. This thesis proposes to develop a rigorous, explainable, and actionable system for predicting Customer Lifetime Value (CLV) and preventing churn using company transactional and usage data. By leveraging classical statistical models such as BG/NBD and Gamma-Gamma, combined with rule-based churn heuristics and automated targeted incentives, the system aims to enable scalable, data-driven retention strategies. The project focuses on utilizing the existing company data store and product usage logs to build a transparent model that prioritizes high-value customers and optimizes incentive campaigns, while ensuring compliance with relevant data privacy regulations.
+Customer behavior prediction is a strategic advantage for SaaS companies seeking to optimize growth, retention, and revenue. This thesis proposes the development of an explainable AI system to predict Customer Lifetime Value (CLV), likelihood of converting from trial to paid, and risk of churn from paid subscriptions. By integrating classical statistical models with machine learning and explainability techniques (e.g., SHAP values), the system will provide transparent and actionable insights for marketing and product teams. A key outcome of the project is an interactive dashboard that visualizes individual and segment-level predictions, enabling data-driven decision-making without relying on opaque black-box models or automated outreach. The system will utilize real customer data, while adhering to data protection regulations, and aims to create a replicable framework for AI-driven marketing analytics in B2B SaaS contexts.
 \end{abstract}
 
 \section{Introduction}
@@ -58,25 +65,21 @@ The company maintains extensive transactional and usage data in its data warehou
 
 \section{Research Objectives}
 The main objectives of this thesis are:
-\begin{itemize}
-    \item To develop a statistically rigorous and explainable CLV prediction model using classical probabilistic methods (BG/NBD and Gamma-Gamma) on company transactional data.
-    \item To define and implement rule-based heuristics for churn risk estimation using product usage and engagement data.
-    \item To integrate CLV and churn risk scores into a prioritization framework for targeting customers with automated incentive email campaigns.
-    \item To design, deploy, and evaluate the impact of incentive campaigns on churn reduction and revenue uplift.
-    \item To ensure compliance with data privacy and marketing regulations applicable in the company’s jurisdiction.
+\begin{itemize}[leftmargin=*]
+    \item To develop an explainable prediction system for key customer behaviors: conversion from trial to paid, churn risk, and expected CLV.
+    \item To evaluate and compare interpretable models (e.g., logistic regression, decision trees) with more complex ML models (e.g., gradient boosting) using explainability tools.
+    \item To construct a dashboard that visualizes individual-level and cohort-level predictions, along with feature importance and confidence indicators.
+    \item To provide marketing and business stakeholders with actionable, transparent insights into customer behavior drivers.
+    \item To ensure compliance with GDPR and data privacy best practices in the design and deployment of predictive tools.
 \end{itemize}
 
 \section{Literature Review}
-Classical probabilistic models such as the BG/NBD (Beta Geometric / Negative Binomial Distribution) and Gamma-Gamma model have been widely adopted for CLV estimation \cite{fader2005counting,fader2007modeling}. These models offer interpretability and reliability, especially in non-contractual settings.
-
-Churn prediction literature spans statistical methods, machine learning, and survival analysis \cite{verbeke2012predictive, verbeke2011new}. However, the practical integration of CLV and churn scores into actionable retention tactics remains an ongoing research challenge \cite{neslin2006defection}.
-
-Automated marketing campaign design, including A/B testing and uplift modeling, provides a pathway to quantify the effectiveness of retention incentives \cite{radcliffe2007using}. Regulatory frameworks like GDPR impose important constraints on customer contact, necessitating privacy-aware system design \cite{voigt2017eu}.
 
 \section{Methodology}
+
 \subsection{Data Collection and Preparation}
 The study will utilize:
-\begin{itemize}
+\begin{itemize}[leftmargin=*]
     \item \textbf{Transactional data}: purchase dates, amounts, customer identifiers, subscription start/end dates.
     \item \textbf{Usage data}: login frequency, feature usage metrics, session durations.
     \item \textbf{Support data}: customer service interactions and ticket logs.
@@ -84,7 +87,7 @@ The study will utilize:
 Data cleaning and preprocessing will be conducted to construct customer-level summary statistics and time series.
 
 \subsection{Modeling}
-\begin{itemize}
+\begin{itemize}[leftmargin=*]
     \item \textbf{CLV Modeling:} Using the \texttt{lifetimes} Python package, implement BG/NBD and Gamma-Gamma models to estimate future purchase frequency and monetary value.
     \item \textbf{Churn Heuristics:} Develop rule-based flags (e.g., inactivity periods, usage decline thresholds) to estimate churn risk in the absence of labeled churn data.
     \item \textbf{Integration:} Combine CLV and churn risk scores into a prioritization schema for targeted retention.
@@ -95,53 +98,56 @@ Using the prioritization framework, design automated incentive email campaigns d
 
 \subsection{Evaluation}
 Evaluate campaign effectiveness via:
-\begin{itemize}
+\begin{itemize}[leftmargin=*]
     \item Churn rate changes between test and control groups.
     \item Revenue uplift and changes in CLV post-intervention.
     \item Statistical significance testing of retention effects.
 \end{itemize}
 
-\subsection{Compliance}
-Review and document data privacy measures, including consent management and opt-out handling, ensuring GDPR and other applicable regulation compliance.
+\subsection{Dashboard for Explainable AI}
+A central deliverable will be a dashboard that integrates predictions from the AI models and presents them in an intuitive, marketing-friendly interface. The dashboard will include:
+\begin{itemize}[leftmargin=*]
+    \item Customer-level predictions: CLV, churn risk, and trial-to-paid likelihood.
+    \item Global and local explainability: using SHAP values to highlight feature importance for each prediction.
+    \item Cohort analytics: visual summaries of behavioral segments, e.g., high-value likely churners.
+    \item Action suggestions: data-driven hypotheses to inform manual marketing actions.
+\end{itemize}
+Tools such as Flask with Python backend will be considered for implementation.
 
 \section{Expected Contributions}
 This research aims to:
-\begin{itemize}
-    \item Provide a transparent, statistically sound framework for CLV prediction in a practical business setting.
-    \item Bridge the gap between churn prediction and actionable retention interventions.
-    \item Demonstrate how classical models can be integrated with automated marketing to improve customer retention.
-    \item Deliver a replicable blueprint for companies starting from minimal infrastructure.
+\begin{itemize}[leftmargin=*]
+    \item Deliver a transparent, explainable framework for predicting Customer Lifetime Value (CLV), churn risk, and trial-to-paid conversion in a SaaS environment.
+    \item Demonstrate the integration of classical models and modern machine learning with explainability tools (e.g., SHAP) to support data-driven decision-making.
+    \item Build an interactive dashboard that visualizes model predictions and their key drivers, enabling marketing and business teams to interpret and act on insights.
+    \item Provide a replicable methodology for companies with limited infrastructure to adopt explainable AI for customer analytics.
+    \item Ensure responsible use of customer data by incorporating privacy-preserving techniques and regulatory compliance (e.g., GDPR).
 \end{itemize}
 
 \section{Timeline}
-\begin{tabular}{p{0.25\linewidth} p{0.7\linewidth}}
-Month 1 & Literature review, data acquisition, initial exploration \\
-Month 2 & Development of CLV and churn heuristic models \\
-Month 3 & Integration and segmentation framework design, setup of automated email campaigns and A/B testing framework, campaign deployment and data collection \\
-Month 4 & Evaluation and analysis of results \\
-Month 5 & Writing thesis draft \\
-Month 6 & Revision and submission \\
+\begin{tabular}{p{2cm}p{12cm}}
+\toprule
+Month 1 & Literature review, data acquisition, initial data cleaning and exploration \\
+Month 2 & Modeling customer conversion, churn risk, and CLV using statistical and ML techniques \\
+Month 3 & Evaluation of models, integration of explainability (e.g., SHAP, LIME), model selection \\
+Month 4 & Build interactive dashboard with explainable AI outputs and marketing-relevant visualizations \\
+Month 5 & Writing thesis draft with technical and business insights \\
+Month 6 & Revision, feedback, and final submission \\
+\bottomrule
 \end{tabular}
-
-
-
-
-
-
-
-
-
-
-
-
 
 \newpage
 
 % ===== REFERENCES =====
 \begin{thebibliography}{9}
 
+\bibitem{quintero2024}
+Into Quintero,  
+\textit{Customer Lifetime Value as a Part of the Customer Journey},  
+Bachelor’s Thesis, Bachelor of Business Administration, International Business,  
+Tampere University of Applied Sciences, April 2024.  
+Available: \url{https://www.theseus.fi/bitstream/handle/10024/852910/Quintero_Into.pdf?sequence=3}
 
 \end{thebibliography}
 
 \end{document}
-
